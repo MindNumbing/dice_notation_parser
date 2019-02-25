@@ -1,0 +1,32 @@
+D ::= d
+    | D
+
+ZDigit ::= 0
+
+NZDigit ::= 1
+          | 2
+          | 3
+          | 4
+          | 5
+          | 6
+          | 7
+          | 8
+          | 9
+
+Digit ::= ZDigit 
+        | NZDigit
+
+NZInteger ::= 1*NZDigit 0*Digit
+
+Die ::= 0*1NZinteger D NZInteger
+
+Operator ::= + 
+           | - 
+           | * 
+           | /
+
+Dice ::= Die
+       | NZINteger + Operator + NZInteger
+       | NZInteger + Operator + Die
+       | Die + Operator + NZInteger
+       | Die + Operatpr + Die
