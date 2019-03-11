@@ -39,3 +39,7 @@ if __name__ == '__main__':
 
     for roll in test_rolls:
         Parser.parse_string(roll)
+
+    test_string = 'This is a test of the parsers ability to seperate rolls from strings of text, for example 1d6 should be parsed and 0d5 should not.'
+    
+    Parser.parse_string(test_string)
