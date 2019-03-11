@@ -38,10 +38,4 @@ if __name__ == '__main__':
     ]
 
     for roll in test_rolls:
-        print(roll)
-        try:
-            result = Parser.parse_string(roll)
-            print('    Match : {}'.format(result))
-        except pp.ParseException as parse_exception:
-            #print('    No Match')
-            print('    No Match : {}\n'.format(str(parse_exception)))
+        Parser.parse_string(roll)
