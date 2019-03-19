@@ -19,14 +19,14 @@ class Parser:
         return Parser
 
     def parse_string(self, string):
-        print('---- Parsing String : {}'.format(string))
+        print('    Parsing String : {}'.format(string))
         try:
             result = self.Parser.parseString(string)
-            print('     Match : {}'.format(result))
+            print('        Match : {}'.format(result))
             return result
         except pp.ParseException as parse_exception:
-            print('     No Match')
-            #print$('     No Match : {}\n'.format(str(parse_exception)))
+            print('        No Match')
+            #print$('        No Match : {}\n'.format(str(parse_exception)))
 
 class Translator:
 
@@ -40,17 +40,18 @@ class Translator:
         return string.translate(self.translation_Table)
 
     def filter(self, string):
+        #print('    Checking for words')
         filtered = list()
         for string in string.split():
             if string.isalpha():
-                print('---- Word Found : {}'.format(string))
+                #print('        Ignored : {}'.format(string))
                 continue
             else:
                 filtered.append(string)
         return filtered
 
 def test(string):
-    print('---- Input String : {}'.format(string))
+    print('--  Input String : {}'.format(string))
     alphanum = Translator.remove_symbols(string)
     filtered = Translator.filter(alphanum)
     for string in filtered:
