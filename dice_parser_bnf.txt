@@ -13,20 +13,13 @@ NZDigit ::= 1
           | 8
           | 9
 
-Digit ::= ZDigit 
-        | NZDigit
+NZInteger ::= NZDigit (NZDigit | ZDigit)+
 
-NZInteger ::= 1*NZDigit 0*Digit
+Die ::= (NZinteger) D NZInteger
 
-Die ::= 0*1NZinteger D NZInteger
+term ::= NZInteger
+       | Die
 
-Operator ::= + 
-           | - 
-           | * 
-           | /
+factor ::= term ('*' | '/' + factor)
 
-Dice ::= Die
-       | NZINteger + Operator + NZInteger
-       | NZInteger + Operator + Die
-       | Die + Operator + NZInteger
-       | Die + Operatpr + Die
+expr ::= factor ('+' | '-' + expr)
