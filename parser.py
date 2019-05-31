@@ -69,17 +69,68 @@ class Filter:
                 filtered.append(string)
         return filtered
 
+class TestHandler:
+
+    def __init__(self, test_cases):
+        if test_cases: self.test_cases = test_cases
+        self.dice_parser = DiceParser()
+
+    def run_tests(self):
+        for test in self.test_cases:
+            print('')
+            print('Processing : {}'.format(test[0]))
+            result = self.dice_parser.handle(test[0])
+
+            if result == test[1]:
+                print('ASSERT - PASS\nResult   : {}\nExpected : {}'.format(result, test[1]))
+            else:
+                print('ASSERT - FAIL\nResult   : {}\nExpected : {}'.format(result, test[1]))
+
 if __name__ == '__main__':
-    dice_parser = DiceParser()
-
-    test_rolls = [
+    test_input = [
         #Fail
-        'd', '1d6+d', 'd0', '0d', '1d', '0d6', '1d06', '1d6+0',
-        #Pass
-        '5+5', 'd6', '1d6', 'd1000/10', 'd6*4', 'd6-d6', 'd6+5', 'd6+d6', 'd6+1d6', '1d6+1', '1d6+d6', '1d6+1d6', '3d12+2/1d2', '2d6+3d6-4d6/5d6*6d6'
+        ('d', None),
+        ('1d6+d', None),
+        ('d0', None),
+        ('0d', None),
+        ('1d', None),
+        ('0d6', None),
+        ('1d06', None),
+        ('1d6+0', None),
+        #Pass - Add extra list for result
+        ('5+5', [[['5'], '+', [['5']]]]),
+        ('5+5+5', [[['5'], '+', [['5'], '+', [['5']]]]]),
+        ('d6', [[[['d', '6']]]]),
+        ('1d6', [[[['1', 'd', '6']]]]),
+        ('d1000/10', [[[['d', '1000'], '/', ['10']]]]),
+        ('d6*4', [[[['d', '6'], '*', ['4']]]]),
+        ('d6+5', [[[['d', '6']], '+', [['5']]]]),
+        ('d6-d6', [[[['d', '6']], '-', [[['d', '6']]]]]),
+        ('d6+d6', [[[['d', '6']], '+', [[['d', '6']]]]]),
+        ('d6+1d6', [[[['d', '6']], '+', [[['1', 'd', '6']]]]]),
+        ('1d6+1', [[[['1', 'd', '6']], '+', [['1']]]]),
+        ('1d6+d6', [[[['1', 'd', '6']], '+', [[['d', '6']]]]]),
+        ('1d6+1d6', [[[['1', 'd', '6']], '+', [[['1', 'd', '6']]]]]),
+        ('1d6+1d6+1d6', [[[['1', 'd', '6']], '+', [[['1', 'd', '6']], '+', [[['1', 'd', '6']]]]]]),
+        ('3d12+2/1d2', [[[['3', 'd', '12']], '+', [['2', '/', [['1', 'd', '2']]]]]]),
+        ('2d6+3d6-4d6/5d6*6d6', [[[['2', 'd', '6']], '+', [[['3', 'd', '6']], '-', [[['4', 'd', '6'], '/', [['5', 'd', '6'], '*', [['6', 'd', '6']]]]]]]]),
+        ('1d6*2d7', [[[['1', 'd', '6'], '*', [['2', 'd', '7']]]]]),
+        ('2d7/9d18', [[[['2', 'd', '7'], '/', [['9', 'd', '18']]]]]),
+        ('9d18+6', [[[['9', 'd', '18']], '+', [['6']]]]),
+        ('6/4', [[['6', '/', ['4']]]]),
+        ('4-20', [[['4'], '-', [['20']]]]),
+        ('1d6*2d7', [[[['1', 'd', '6'], '*', [['2', 'd', '7']]]]]),
+        ('1d6*2d7/9d18', [[[['1', 'd', '6'], '*', [['2', 'd', '7'], '/', [['9', 'd', '18']]]]]]),
+        ('1d6*2d7/9d18+6', [[[['1', 'd', '6'], '*', [['2', 'd', '7'], '/', [['9', 'd', '18']]]], '+', [['6']]]]),
+        ('1d6*2d7/9d18+6/4', [[[['1', 'd', '6'], '*', [['2', 'd', '7'], '/', [['9', 'd', '18']]]], '+', [['6', '/', ['4']]]]]),
+        ('1d6*2d7/9d18+6/4-20', [[[['1', 'd', '6'], '*', [['2', 'd', '7'], '/', [['9', 'd', '18']]]], '+', [['6', '/', ['4']], '-', [['20']]]]])
     ]
-    for roll in test_rolls:
-        dice_parser.handle(roll)
 
-    test_string = 'This is a test of the parsers ability to seperate rolls from strings of text, for example 1d6 should be parsed and 0d5 should not.'
-    dice_parser.handle(test_string)
+    test_handler = TestHandler(test_input)
+    test_handler.run_tests()
+
+    #test_string = 'This is a test of the parsers ability to seperate rolls from strings of text, for example 1d6 should be parsed and 0d5 should not.'
+    #results.append(dice_parser.handle(test_string))
+
+    #for result in results:
+    #    print(result)
