@@ -26,16 +26,21 @@ class Parser:
         self.Parser = self.__generate_parser()
 
     def __generate_parser(self):
-        D = pp.Word('Dd')
-        ZeroDigit = pp.Word(str('0'))
-        NonZeroDigit = pp.Word(str('123456789'))
-        Digit = pp.Or([ZeroDigit, NonZeroDigit])
-        NonZeroInteger = pp.OneOrMore(pp.Combine(NonZeroDigit + pp.ZeroOrMore(Digit)))
-        Die = pp.Group(pp.Optional(NonZeroInteger) + D + NonZeroInteger)
-        Operator = pp.Word(r'+-*/')
-        Parser = pp.Or([Die, pp.OneOrMore(pp.Or([Die, NonZeroInteger]) + Operator) + pp.Or([Die, NonZeroInteger])])
+        d = pp.Word('Dd')
+        zero_digit = pp.Word(str('0'))
+        non_zero_digit = pp.Word(str('123456789'))
+        digit = pp.Or([zero_digit, non_zero_digit])
+        non_zero_integer = pp.OneOrMore(pp.Combine(non_zero_digit + pp.ZeroOrMore(digit)))
+        roll = pp.Group(pp.Optional(non_zero_integer) + d + non_zero_integer)
+        term = pp.Or([non_zero_integer, roll])
+        
+        factor = pp.Forward()
+        factor << pp.Group(term + pp.ZeroOrMore(pp.Or(['*', '/']) + factor))
 
-        return Parser
+        expr = pp.Forward()
+        expr << pp.Group(factor + pp.ZeroOrMore(pp.Or(['+', '-']) + expr))
+
+        return expr
 
     def parse_string(self, string):
         print('    Parsing String : {}'.format(string))
