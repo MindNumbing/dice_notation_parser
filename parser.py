@@ -19,9 +19,9 @@ class DiceParser:
 class Parser:
 
     def __init__(self):
-        self.Parser = self.__generate_parser()
+        self.Parser = self._generate_parser()
 
-    def __generate_parser(self):
+    def _generate_parser(self):
         d = pp.Word('Dd')
         zero_digit = pp.Word(str('0'))
         non_zero_digit = pp.Word(str('123456789'))
