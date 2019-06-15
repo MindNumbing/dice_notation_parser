@@ -10,8 +10,7 @@ class DiceParser:
 
     def handle(self, input_string):
         print('--- Input String : {}'.format(input_string))
-        alphanum = self.filter.filter_symbols(input_string)
-        filtered = self.filter.filter_words(alphanum)
+        filtered = self.filter.filter(input_string)
         for token in filtered:
             self.parser.parse_string(token)
 
@@ -53,6 +52,11 @@ class Filter:
 
     def __init__(self):
         self.translation_table = self._generate_table()
+
+    def filter(self, input_string):
+        alphanum = self.filter_symbols(input_string)
+        filtered = self.filter_words(alphanum)
+        return filtered
 
     def _generate_table(self):
         return str.maketrans('', '', '!"£$%^&()_={}[]:;\'\\@#~<>,.?|')
