@@ -1,5 +1,6 @@
 import pyparsing as pp
 import string
+import time
 
 
 class DiceParser:
@@ -11,8 +12,10 @@ class DiceParser:
     def handle(self, input_string):
         print('--- Input String : {}'.format(input_string))
         filtered = self.filter.filter(input_string)
-        for token in filtered:
-            self.parser.parse_string(token)
+        results = self.parser.parse_string(filtered)
+        if results:
+            return results
+        return None
 
 
 class Parser:
@@ -38,14 +41,17 @@ class Parser:
         return expr
 
     def parse_string(self, input_string):
-        print('    Parsing String : {}'.format(input_string))
-        try:
-            result = self.Parser.parseString(input_string)
-            print('        Match : {}'.format(result))
-            return result
-        except pp.ParseException as parse_exception:
-            print('        No Match')
-            # print$('        No Match : {}\n'.format(str(parse_exception)))
+        results = []
+        for word in string_list:
+            try:
+                result = self.Parser.parseString(string, parseAll=True).asList()
+                results.append(result[0])
+            except pp.ParseException as parse_exception:
+                print(parse_exception.line)
+                print(' ' * (parse_exception.col - 1) + '^')
+                print(parse_exception)
+                pass
+        return results
 
 
 class Filter:
