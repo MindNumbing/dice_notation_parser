@@ -1,24 +1,20 @@
 import pyparsing as pp
 import string
 
+
 class DiceParser:
 
     def __init__(self):
-        self.parser = self.get_parser()
-        self.filter = self.get_filter()
+        self.parser = Parser()
+        self.filter = Filter()
 
-    def get_parser(self):
-        return Parser()
-
-    def get_filter(self):
-        return Filter()
-
-    def handle(self, string):
-        print('--- Input String : {}'.format(string))
-        alphanum = self.filter.filter_symbols(string)
+    def handle(self, input_string):
+        print('--- Input String : {}'.format(input_string))
+        alphanum = self.filter.filter_symbols(input_string)
         filtered = self.filter.filter_words(alphanum)
-        for string in filtered:
-            self.parser.parse_string(string)
+        for token in filtered:
+            self.parser.parse_string(token)
+
 
 class Parser:
 
@@ -42,42 +38,45 @@ class Parser:
 
         return expr
 
-    def parse_string(self, string):
-        print('    Parsing String : {}'.format(string))
+    def parse_string(self, input_string):
+        print('    Parsing String : {}'.format(input_string))
         try:
-            result = self.Parser.parseString(string)
+            result = self.Parser.parseString(input_string)
             print('        Match : {}'.format(result))
             return result
         except pp.ParseException as parse_exception:
             print('        No Match')
-            #print$('        No Match : {}\n'.format(str(parse_exception)))
+            # print$('        No Match : {}\n'.format(str(parse_exception)))
+
 
 class Filter:
 
     def __init__(self):
-        self.translation_table = self.__generate_table()
+        self.translation_table = self._generate_table()
 
-    def __generate_table(self):
+    def _generate_table(self):
         return str.maketrans('', '', '!"£$%^&()_={}[]:;\'\\@#~<>,.?|')
 
-    def filter_symbols(self, string):
-        return string.translate(self.translation_table)
+    def filter_symbols(self, input_string):
+        return input_string.translate(self.translation_table)
 
-    def filter_words(self, string):
-        #print('    Checking for words')
+    def filter_words(self, input_string):
+        # print('    Checking for words')
         filtered = list()
-        for string in string.split():
-            if string.isalpha():
-                #print('        Ignored : {}'.format(string))
+        for word in input_string.split():
+            if word.isalpha():
+                # print('        Ignored : {}'.format(word))
                 continue
             else:
-                filtered.append(string)
+                filtered.append(word)
         return filtered
+
 
 class TestHandler:
 
     def __init__(self, test_cases):
-        if test_cases: self.test_cases = test_cases
+        if test_cases:
+            self.test_cases = test_cases
         self.dice_parser = DiceParser()
 
     def run_tests(self):
@@ -91,9 +90,10 @@ class TestHandler:
             else:
                 print('ASSERT - FAIL\nResult   : {}\nExpected : {}'.format(result, test[1]))
 
+
 if __name__ == '__main__':
     test_input = [
-        #Fail
+        # Fail
         ('d', None),
         ('1d6+d', None),
         ('d0', None),
@@ -102,7 +102,7 @@ if __name__ == '__main__':
         ('0d6', None),
         ('1d06', None),
         ('1d6+0', None),
-        #Pass - Add extra list for result
+        # Pass - Add extra list for result
         ('5+5', [[['5'], '+', [['5']]]]),
         ('5+5+5', [[['5'], '+', [['5'], '+', [['5']]]]]),
         ('d6', [[[['d', '6']]]]),
@@ -134,8 +134,8 @@ if __name__ == '__main__':
     test_handler = TestHandler(test_input)
     test_handler.run_tests()
 
-    #test_string = 'This is a test of the parsers ability to seperate rolls from strings of text, for example 1d6 should be parsed and 0d5 should not.'
-    #results.append(dice_parser.handle(test_string))
+    # test_string = 'This is a test of the parsers ability to seperate rolls from strings of text, for example 1d6 should be parsed and 0d5 should not.'
+    # results.append(dice_parser.handle(test_string))
 
-    #for result in results:
+    # for result in results:
     #    print(result)
