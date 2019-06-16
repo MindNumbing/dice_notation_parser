@@ -40,11 +40,11 @@ class Parser:
 
         return expr
 
-    def parse_string(self, input_string):
+    def parse_string(self, string_list):
         results = []
         for word in string_list:
             try:
-                result = self.Parser.parseString(string, parseAll=True).asList()
+                result = self.Parser.parseString(word, parseAll=True).asList()
                 results.append(result[0])
             except pp.ParseException as parse_exception:
                 print(parse_exception.line)
